@@ -79,6 +79,8 @@ public class MainActivity extends AppCompatActivity {
                     startButton.setTextColor(getResources().getColor(R.color.white));
                     startButton.setText("タイマー　開始");
                     timerText.setText("00:00.0");
+                    timeList.clear();
+                    listView.setAdapter(adapter);
                 }
             }
         });
