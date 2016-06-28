@@ -4,16 +4,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button startButton, lapButton;
-    private TextView timerText, lapText;
+    private TextView timerText;
 
     private Timer timer;
     private CountUpTimerTask timerTask = null;
@@ -32,9 +36,13 @@ public class MainActivity extends AppCompatActivity {
 
         startButton = (Button) findViewById(R.id.start_button);
         lapButton = (Button) findViewById(R.id.lap_button);
-
         timerText = (TextView) findViewById(R.id.timer);
-        lapText = (TextView) findViewById(R.id.lap);
+
+        final List<String> timeList = new ArrayList<String>();
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,timeList);
+        final ListView listView = (ListView) findViewById(R.id.time_list);
+        listView.setAdapter(adapter);
+
         timerText.setText("00:00.0");
 
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -71,8 +79,6 @@ public class MainActivity extends AppCompatActivity {
                     startButton.setTextColor(getResources().getColor(R.color.white));
                     startButton.setText("タイマー　開始");
                     timerText.setText("00:00.0");
-                    lap = "";
-                    lapText.setText(lap);
                 }
             }
         });
@@ -84,13 +90,11 @@ public class MainActivity extends AppCompatActivity {
                     if(timer != null) {
                         lapCount++;
                         if (lapCount < 10)
-                            lap += "0" + lapCount + " " + String.format("%1$02d:%2$02d.%3$01d", mm, ss, ms) + "\n";
+                            timeList.add("0"+lapCount+": "+String.format("%1$02d:%2$02d.%3$01d", mm, ss, ms));
                         else
-                            lap += lapCount + " " + String.format("%1$02d:%2$02d.%3$01d", mm, ss, ms) + "\n";
+                            timeList.add(lapCount+": "+String.format("%1$02d:%2$02d.%3$01d", mm, ss, ms));
                     }
-                }
-                if (lap != null) {
-                    lapText.setText(lap);
+                    listView.setAdapter(adapter);
                 }
             }
         });
